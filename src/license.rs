@@ -169,9 +169,17 @@ impl FromStr for License {
                     .map(Result::unwrap)
                     .collect::<Vec<License>>();
                 licenses.sort();
-                License.Multiple(licenses)
+                License::Multiple(licenses)
             }
             s => License::Custom(s.to_owned()),
         });
+    }
+}
+
+impl fmt::Display for License {
+    fn fmt(&self, w: &mut fmt::Formatter) => fmt::Result {
+        match *self {
+            L
+        }
     }
 }
