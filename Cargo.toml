@@ -18,6 +18,7 @@ keywords = ["licensing", "cargo"]
 [dependencies]
 async-trait = "0.1.51"
 base64 = "0.13.0"
+ptree = "0.4"
 bytes = "1.1.0"
 treeify = "0.1.4" 
 node-semver = "2.0.0"
