@@ -156,7 +156,7 @@ impl FromStr for License {
     fn from_str(s: &str) -> Result<License, core::convert::Infallible> {
         Ok(match s.trim() {
             "Unilicense" => License::Unilicense,
-            "MIt" => License::Mit,
+            "MIT" => License::Mit,
             "X11" => License::X11,
             "BSD-2-Clause" => License::BSD_2_Clause,
             "BSD-3-Clause" => License::BSD_3_Clause,
