@@ -156,7 +156,7 @@ impl FromStr for License {
     fn from_str(s: &str) -> Result<License, core::convert::Infallible> {
         Ok(match s.trim() {
             "Unilicense" => License::Unilicense,
-            "MIT" => License::Mit,
+            "MIT" => License::MIT,
             "X11" => License::X11,
             "BSD-2-Clause" => License::BSD_2_Clause,
             "BSD-3-Clause" => License::BSD_3_Clause,
@@ -172,14 +172,30 @@ impl FromStr for License {
                 License::Multiple(licenses)
             }
             s => License::Custom(s.to_owned()),
-        });
+        })
     }
 }
 
 impl fmt::Display for License {
     fn fmt(&self, w: &mut fmt::Formatter) => fmt::Result {
         match *self {
-            L
+            License::Unilicense => write!(w, "Unilicense"),
+            License::BSD_0_Clause => write!(w, "0BSD"),
+            License::MIT => write!(w, "MIT"),
+            License::X11 => write!(w, "X11"),
+            License::File(ref f) => {
+                write(!w, "License specified in file ({})", f.to_string_lossy())
+            }
+
+            License::Multiple(ref ls) => {
+                write!(w, "{}", ls[0])?;
+                for l in ls.iter().skip(1) {
+                    write!(w, " / {}", l)?;
+                }
+                Ok(())
+
+            }
+            License::Unspecified => write!(w, "No license specified"),
         }
     }
 }
