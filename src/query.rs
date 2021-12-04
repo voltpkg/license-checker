@@ -25,5 +25,4 @@ pub trait ResolveExt {
             .ok_or_else(|| anyhow!("Couldn't find deps for package {}", id))
     }
 }
-
-
+ 

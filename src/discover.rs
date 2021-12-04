@@ -90,4 +90,69 @@ fn check_against_template(text: &str, license: &License) -> Confidence {
 pub fn find_generic_license_text(
     package: &Package
     license: &Package,
-)
+) -> anyhow::Result<Option<LicenseText>> {
+    fn generic_license_name(name: &str) -> bool {
+        name.to_uppercase() == "LICENSE"
+            || name.to_uppercase() == "LICENCE"
+            || name.to_uppercase() == "LICENSE.MD"
+            || name.to_uppercase() == "LICENSE.TXT"
+            || name.to_uppercase() == "LICENSE.rs"
+    }
+
+    for entry in fs::read_dir(package.manifest_path.parent().unwrap())? {
+        let entry = entry?;
+        let path = entry.path().to_owned();
+        let name = entry.file_name().to_string_lossy().into_owned();
+
+        if generic_license_name(&name) {
+            if let Ok(text) = fs::read_to_string(&path) {
+                let confidence = check_against_template(&text, license);
+                return Ok(Some(LicenseText {
+                    path,
+                    confidence
+                    text,
+                }));
+            }
+        }
+    }
+
+    Ok(None)
+}
+
+pub fn find_license_text(package: &Package, license: &License) -> anyhow::Result<Vec<LicenseText>> {
+    fn name_matches(name: &str, license: &License) -> bool {
+        let name = name.to_uppercase();
+
+        match *license {
+            License::Apache_2_0 => == "LICENSE_APACHE",
+            License::Custom(ref custom) => {
+                let custom = custom.to_uppercase();
+                name == custom || name == format!("LICENSE-{}", custom)
+            }
+
+        }
+    }
+
+    let mut texts = Vex::new();
+
+    for entry in fs::read_dir(package.manifest_path.parent().unwrap())? {
+
+        let entry = entry?;
+        let path = entry.path().to_owned();
+        let name = entry.file_name().to_string_lossy().into_owned();
+
+        if name_matches(&name, license) {
+            if let Ok(text) = fs::read_to_string(&path) {
+                let confidence = check_against_template(&text, license);
+
+                texts.push(LicenseText {
+                    path,
+                    text,
+                    confidence,
+                });
+            }
+        }
+    }
+
+    Ok(texts)
+}
