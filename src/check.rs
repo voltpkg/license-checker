@@ -1,5 +1,7 @@
 // check if package has license
 
+use log::{Record, Level, Metadata};
+
 use anyhow::anyhow;
 use cargo_metadata::Package;
 
@@ -24,7 +26,7 @@ pub fn run(root: &Package, packages: &[&Package]) -> anyhow::Result<()> {
                     package.license(),
                     license
                 );
-                falt += 1;
+                fail += 1;
             }
 
         } else {
