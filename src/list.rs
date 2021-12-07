@@ -27,7 +27,7 @@ pub fn run(packages: &[&Package], by: By) -> anyhow::Result<()> {
                     .sorted()
                     .join(", ");
                 println!("{}: {}", license, packages);
-                })
+                }
         }
 
         By::Crate => {
@@ -47,5 +47,3 @@ pub fn run(packages: &[&Package], by: By) -> anyhow::Result<()> {
 
     Ok(())
 }
-
-
